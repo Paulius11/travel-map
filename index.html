@@ -201,10 +201,12 @@
     .borders { fill: none; stroke: var(--cborder); stroke-width: .5; pointer-events: none; }
 
     path.country { stroke: var(--cborder); stroke-width: .5; cursor: pointer;
-      fill: var(--unvisited); fill-opacity: 1; transition: fill .2s, fill-opacity .2s; }
+      fill: var(--unvisited); fill-opacity: 1; transition: fill .2s, fill-opacity .2s, opacity .25s; }
     path.country.hovered:not(.visited) { fill: var(--unvisited-hover); }
     path.country.visited { fill: var(--visited); }
     path.country.visited.hovered { fill: var(--visited-hover); }
+    path.country.dimmed { opacity: 0.18; }
+    path.country.dimmed.hovered { opacity: 0.6; }
 
     @keyframes visitedPulse {
       0%   { fill: #ffe0c0; }
@@ -845,6 +847,45 @@ function resetView() {
     .call(zoom.transform, d3.zoomIdentity);
 }
 
+function flyToContinent(cc) {
+  if (!cc) { resetView(); return; }
+  const numIds = new Set(
+    ALL_COUNTRIES
+      .filter(c => c.continent === cc)
+      .map(c => parseInt(ALPHA2_TO_NUMERIC[c.alpha2]))
+      .filter(n => !isNaN(n))
+  );
+  const feats = TOPO_FEATURES.filter(f => numIds.has(parseInt(f.id)));
+  if (!feats.length) { resetView(); return; }
+
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const f of feats) {
+    const [[a, b], [c, d]] = geoPath.bounds(f);
+    if (a < x0) x0 = a;
+    if (b < y0) y0 = b;
+    if (c > x1) x1 = c;
+    if (d > y1) y1 = d;
+  }
+
+  const dx = x1 - x0 || 10, dy = y1 - y0 || 10;
+  const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+  const scale = Math.min(8, 0.85 / Math.max(dx / mapWidth, dy / mapHeight));
+  const tx = mapWidth  / 2 - scale * cx;
+  const ty = mapHeight / 2 - scale * cy;
+
+  svg.transition().duration(750).ease(d3.easeCubicInOut)
+    .call(zoom.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
+}
+
+function updateContinentHighlight() {
+  const cc = state.continent;
+  g.selectAll('path.country').classed('dimmed', function(d) {
+    if (!cc) return false;
+    const a2 = NUMERIC_TO_ALPHA2[String(+d.id)];
+    return !!a2 && COUNTRIES[a2] && COUNTRIES[a2].continent !== cc;
+  });
+}
+
 function resetAll() {
   if (!state.visited.size) { showToast('Nothing to reset', 'warning'); return; }
   const n = state.visited.size;
@@ -959,11 +1000,26 @@ document.getElementById('search-input').addEventListener('input', e => {
 document.getElementById('continent-section').addEventListener('click', e => {
   const btn = e.target.closest('[data-c]');
   if (!btn) return;
+  const cc = btn.dataset.c;
+
+  // Re-clicking the active continent card deselects.
+  if (cc && state.continent === cc) {
+    state.continent = '';
+    document.querySelectorAll('.cgrid-card').forEach(b => b.classList.remove('active'));
+    document.getElementById('ctab-all').classList.add('active');
+    renderSidebar();
+    updateContinentHighlight();
+    resetView();
+    return;
+  }
+
   document.getElementById('ctab-all').classList.remove('active');
   document.querySelectorAll('.cgrid-card').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  state.continent = btn.dataset.c;
+  state.continent = cc;
   renderSidebar();
+  updateContinentHighlight();
+  if (cc) flyToContinent(cc); else resetView();
 });
 
 // ═══════════════════════════════════════════════════════════════
