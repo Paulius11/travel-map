@@ -387,18 +387,18 @@ const WORLD_TOPO = {"type":"Topology","objects":{"countries":{"type":"GeometryCo
 // A — COUNTRY DATA  [alpha2, name, continent]
 // ═══════════════════════════════════════════════════════════════
 const COUNTRY_DATA = [
-  ["AF","Afghanistan","AS"],["AL","Albania","EU"],["DZ","Algeria","AF"],
+  ["AF","Afghanistan","SAS"],["AL","Albania","EU"],["DZ","Algeria","AF"],
   ["AD","Andorra","EU"],["AQ","Antarctica","AN"],["AO","Angola","AF"],["AG","Antigua and Barbuda","CAR"],
-  ["AR","Argentina","SA"],["AM","Armenia","AS"],["AU","Australia","OC"],
-  ["AT","Austria","EU"],["AZ","Azerbaijan","AS"],["BS","Bahamas","CAR"],
-  ["BH","Bahrain","AS"],["BD","Bangladesh","AS"],["BB","Barbados","CAR"],
+  ["AR","Argentina","SA"],["AM","Armenia","WAS"],["AU","Australia","OC"],
+  ["AT","Austria","EU"],["AZ","Azerbaijan","WAS"],["BS","Bahamas","CAR"],
+  ["BH","Bahrain","WAS"],["BD","Bangladesh","SAS"],["BB","Barbados","CAR"],
   ["BY","Belarus","EU"],["BE","Belgium","EU"],["BZ","Belize","CAM"],
-  ["BJ","Benin","AF"],["BT","Bhutan","AS"],["BO","Bolivia","SA"],
+  ["BJ","Benin","AF"],["BT","Bhutan","SAS"],["BO","Bolivia","SA"],
   ["BA","Bosnia and Herzegovina","EU"],["BW","Botswana","AF"],["BR","Brazil","SA"],
-  ["BN","Brunei","AS"],["BG","Bulgaria","EU"],["BF","Burkina Faso","AF"],
-  ["BI","Burundi","AF"],["CV","Cape Verde","AF"],["KH","Cambodia","AS"],
+  ["BN","Brunei","SEAS"],["BG","Bulgaria","EU"],["BF","Burkina Faso","AF"],
+  ["BI","Burundi","AF"],["CV","Cape Verde","AF"],["KH","Cambodia","SEAS"],
   ["CM","Cameroon","AF"],["CA","Canada","NA"],["CF","Cent. African Republic","AF"],
-  ["TD","Chad","AF"],["CL","Chile","SA"],["CN","China","AS"],
+  ["TD","Chad","AF"],["CL","Chile","SA"],["CN","China","EAS"],
   ["CO","Colombia","SA"],["KM","Comoros","AF"],["CD","DR Congo","AF"],
   ["CG","Rep. of the Congo","AF"],["CR","Costa Rica","CAM"],["CI","Côte d'Ivoire","AF"],
   ["HR","Croatia","EU"],["CU","Cuba","CAR"],["CY","Cyprus","EU"],
@@ -408,51 +408,51 @@ const COUNTRY_DATA = [
   ["EH","Western Sahara","AF"],["ER","Eritrea","AF"],["EE","Estonia","EU"],["SZ","Eswatini","AF"],
   ["ET","Ethiopia","AF"],["FK","Falkland Islands","SA"],["FJ","Fiji","OC"],["FI","Finland","EU"],
   ["FR","France","EU"],["GA","Gabon","AF"],["GM","Gambia","AF"],
-  ["GE","Georgia","AS"],["DE","Germany","EU"],["GH","Ghana","AF"],
+  ["GE","Georgia","WAS"],["DE","Germany","EU"],["GH","Ghana","AF"],
   ["GL","Greenland","NA"],["GR","Greece","EU"],["GD","Grenada","CAR"],["GT","Guatemala","CAM"],
   ["GN","Guinea","AF"],["GW","Guinea-Bissau","AF"],["GY","Guyana","SA"],
   ["HT","Haiti","CAR"],["HN","Honduras","CAM"],["HU","Hungary","EU"],
-  ["IS","Iceland","EU"],["IN","India","AS"],["ID","Indonesia","AS"],
-  ["IR","Iran","AS"],["IQ","Iraq","AS"],["IE","Ireland","EU"],
-  ["IL","Israel","AS"],["IT","Italy","EU"],["JM","Jamaica","CAR"],
-  ["JP","Japan","AS"],["JO","Jordan","AS"],["KZ","Kazakhstan","AS"],
-  ["KE","Kenya","AF"],["KI","Kiribati","OC"],["KW","Kuwait","AS"],
-  ["KG","Kyrgyzstan","AS"],["LA","Laos","AS"],["LV","Latvia","EU"],
-  ["LB","Lebanon","AS"],["LS","Lesotho","AF"],["LR","Liberia","AF"],
+  ["IS","Iceland","EU"],["IN","India","SAS"],["ID","Indonesia","SEAS"],
+  ["IR","Iran","SAS"],["IQ","Iraq","WAS"],["IE","Ireland","EU"],
+  ["IL","Israel","WAS"],["IT","Italy","EU"],["JM","Jamaica","CAR"],
+  ["JP","Japan","EAS"],["JO","Jordan","WAS"],["KZ","Kazakhstan","CAS"],
+  ["KE","Kenya","AF"],["KI","Kiribati","OC"],["KW","Kuwait","WAS"],
+  ["KG","Kyrgyzstan","CAS"],["LA","Laos","SEAS"],["LV","Latvia","EU"],
+  ["LB","Lebanon","WAS"],["LS","Lesotho","AF"],["LR","Liberia","AF"],
   ["LY","Libya","AF"],["LI","Liechtenstein","EU"],["LT","Lithuania","EU"],
   ["LU","Luxembourg","EU"],["MG","Madagascar","AF"],["MW","Malawi","AF"],
-  ["MY","Malaysia","AS"],["MV","Maldives","AS"],["ML","Mali","AF"],
+  ["MY","Malaysia","SEAS"],["MV","Maldives","SAS"],["ML","Mali","AF"],
   ["MT","Malta","EU"],["MH","Marshall Islands","OC"],["MR","Mauritania","AF"],
   ["MU","Mauritius","AF"],["MX","Mexico","NA"],["FM","Micronesia","OC"],
-  ["MD","Moldova","EU"],["MC","Monaco","EU"],["MN","Mongolia","AS"],
+  ["MD","Moldova","EU"],["MC","Monaco","EU"],["MN","Mongolia","EAS"],
   ["ME","Montenegro","EU"],["MA","Morocco","AF"],["MZ","Mozambique","AF"],
-  ["MM","Myanmar","AS"],["NA","Namibia","AF"],["NR","Nauru","OC"],
-  ["NP","Nepal","AS"],["NL","Netherlands","EU"],["NC","New Caledonia","OC"],["NZ","New Zealand","OC"],
+  ["MM","Myanmar","SEAS"],["NA","Namibia","AF"],["NR","Nauru","OC"],
+  ["NP","Nepal","SAS"],["NL","Netherlands","EU"],["NC","New Caledonia","OC"],["NZ","New Zealand","OC"],
   ["NI","Nicaragua","CAM"],["NE","Niger","AF"],["NG","Nigeria","AF"],
-  ["MK","North Macedonia","EU"],["KP","North Korea","AS"],["NO","Norway","EU"],
-  ["OM","Oman","AS"],["PK","Pakistan","AS"],["PW","Palau","OC"],
+  ["MK","North Macedonia","EU"],["KP","North Korea","EAS"],["NO","Norway","EU"],
+  ["OM","Oman","WAS"],["PK","Pakistan","SAS"],["PW","Palau","OC"],
   ["PA","Panama","CAM"],["PG","Papua New Guinea","OC"],["PY","Paraguay","SA"],["PR","Puerto Rico","CAR"],
-  ["PE","Peru","SA"],["PH","Philippines","AS"],["PL","Poland","EU"],
-  ["PT","Portugal","EU"],["QA","Qatar","AS"],["RO","Romania","EU"],
+  ["PE","Peru","SA"],["PH","Philippines","SEAS"],["PL","Poland","EU"],
+  ["PT","Portugal","EU"],["QA","Qatar","WAS"],["RO","Romania","EU"],
   ["RU","Russia","EU"],["RW","Rwanda","AF"],["KN","Saint Kitts and Nevis","CAR"],
   ["LC","Saint Lucia","CAR"],["VC","St Vincent & Grenadines","CAR"],
   ["WS","Samoa","OC"],["SM","San Marino","EU"],["ST","São Tomé & Príncipe","AF"],
-  ["SA","Saudi Arabia","AS"],["SN","Senegal","AF"],["RS","Serbia","EU"],
-  ["SC","Seychelles","AF"],["SL","Sierra Leone","AF"],["SG","Singapore","AS"],
+  ["SA","Saudi Arabia","WAS"],["SN","Senegal","AF"],["RS","Serbia","EU"],
+  ["SC","Seychelles","AF"],["SL","Sierra Leone","AF"],["SG","Singapore","SEAS"],
   ["SK","Slovakia","EU"],["SI","Slovenia","EU"],["SB","Solomon Islands","OC"],
-  ["SO","Somalia","AF"],["ZA","South Africa","AF"],["KR","South Korea","AS"],
-  ["SS","South Sudan","AF"],["ES","Spain","EU"],["LK","Sri Lanka","AS"],
+  ["SO","Somalia","AF"],["ZA","South Africa","AF"],["KR","South Korea","EAS"],
+  ["SS","South Sudan","AF"],["ES","Spain","EU"],["LK","Sri Lanka","SAS"],
   ["SD","Sudan","AF"],["SR","Suriname","SA"],["SE","Sweden","EU"],
-  ["CH","Switzerland","EU"],["SY","Syria","AS"],["TW","Taiwan","AS"],
-  ["TJ","Tajikistan","AS"],["TZ","Tanzania","AF"],["TH","Thailand","AS"],
-  ["TL","Timor-Leste","AS"],["TG","Togo","AF"],["TO","Tonga","OC"],
-  ["TT","Trinidad and Tobago","CAR"],["TN","Tunisia","AF"],["TR","Turkey","AS"],
-  ["TM","Turkmenistan","AS"],["TV","Tuvalu","OC"],["UG","Uganda","AF"],
-  ["UA","Ukraine","EU"],["AE","United Arab Emirates","AS"],["GB","United Kingdom","EU"],
-  ["US","United States","NA"],["UY","Uruguay","SA"],["UZ","Uzbekistan","AS"],
+  ["CH","Switzerland","EU"],["SY","Syria","WAS"],["TW","Taiwan","EAS"],
+  ["TJ","Tajikistan","CAS"],["TZ","Tanzania","AF"],["TH","Thailand","SEAS"],
+  ["TL","Timor-Leste","SEAS"],["TG","Togo","AF"],["TO","Tonga","OC"],
+  ["TT","Trinidad and Tobago","CAR"],["TN","Tunisia","AF"],["TR","Turkey","WAS"],
+  ["TM","Turkmenistan","CAS"],["TV","Tuvalu","OC"],["UG","Uganda","AF"],
+  ["UA","Ukraine","EU"],["AE","United Arab Emirates","WAS"],["GB","United Kingdom","EU"],
+  ["US","United States","NA"],["UY","Uruguay","SA"],["UZ","Uzbekistan","CAS"],
   ["VU","Vanuatu","OC"],["VA","Vatican City","EU"],["VE","Venezuela","SA"],
-  ["VN","Vietnam","AS"],["YE","Yemen","AS"],["ZM","Zambia","AF"],
-  ["ZW","Zimbabwe","AF"],["PS","Palestine","AS"],["XK","Kosovo","EU"]
+  ["VN","Vietnam","SEAS"],["YE","Yemen","WAS"],["ZM","Zambia","AF"],
+  ["ZW","Zimbabwe","AF"],["PS","Palestine","WAS"],["XK","Kosovo","EU"]
 ];
 
 function flagEmoji(a2) {
@@ -473,8 +473,12 @@ const CONTINENTS = [
   { code: 'SA',  name: 'S. America' },
   { code: 'EU',  name: 'Europe' },
   { code: 'AF',  name: 'Africa' },
-  { code: 'AS',  name: 'Asia' },
-  { code: 'OC',  name: 'Oceania' },
+  { code: 'WAS',  name: 'W. Asia' },
+  { code: 'CAS',  name: 'Cent. Asia' },
+  { code: 'SAS',  name: 'S. Asia' },
+  { code: 'SEAS', name: 'SE Asia' },
+  { code: 'EAS',  name: 'E. Asia' },
+  { code: 'OC',   name: 'Oceania' },
   { code: 'AN',  name: 'Antarctica' },
 ];
 
@@ -753,6 +757,23 @@ function updateMapColors() {
   });
 }
 
+function labelCentroid(feature) {
+  // Use the largest sub-polygon so countries with distant overseas
+  // territories (France/French Guiana, USA/Alaska, Norway/Svalbard, …)
+  // get their label on the mainland instead of averaged into the ocean.
+  const geom = feature.geometry;
+  if (geom && geom.type === 'MultiPolygon') {
+    let largest = null, maxArea = -Infinity;
+    for (const coords of geom.coordinates) {
+      const poly = { type: 'Polygon', coordinates: coords };
+      const area = d3.geoArea(poly);
+      if (area > maxArea) { maxArea = area; largest = poly; }
+    }
+    if (largest) return d3.geoCentroid(largest);
+  }
+  return d3.geoCentroid(feature);
+}
+
 function renderLabels() {
   if (!gLabels) return;
   gLabels.selectAll('text').remove();
@@ -761,7 +782,7 @@ function renderLabels() {
     .join('text')
     .attr('class', 'country-label')
     .attr('transform', d => {
-      const c = projection(d3.geoCentroid(d));
+      const c = projection(labelCentroid(d));
       return c ? `translate(${c[0]},${c[1]})` : null;
     })
     .text(d => {
