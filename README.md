@@ -6,13 +6,16 @@ Installable PWA that tracks countries you've visited on an interactive dark-them
 
 ## Features
 
-- Interactive D3 + TopoJSON world map (200+ countries) with pan, zoom, and click-to-toggle.
-- Per-continent stats with area-weighted "% of land covered" — not just country count.
-- Continent card grid for at-a-glance summary across Africa, Europe, Asia, the Americas, Oceania, Antarctica, and the Caribbean.
-- Zoom-revealed country name labels.
-- QR + copy-link sharing — state is encoded in the URL hash, so a single link reproduces the exact set of visited countries on another device.
+- **Progress hero** — on open you see "N / total countries visited" with a progress ring, % of world land and regions covered. It counts up as you add countries and celebrates 10/25/50/100/150.
+- Interactive D3 + TopoJSON world map with pan, zoom, +/- controls and click-to-toggle. On touch screens the first tap opens a country card, so stray taps never change anything.
+- **Search that navigates** — type a country, press Enter to fly to it and open its card; arrow keys and Space work from the keyboard.
+- **Visited / Not yet / All** tabs, grouped by region, plus a region chip strip with per-region progress.
+- Undo for every add, remove and "Clear all".
+- Swipeable mobile bottom sheet (peek / half / full) that keeps your count and search visible.
+- QR + copy-link sharing — state lives in the URL hash. Opening someone else's link shows a banner and never overwrites your saved map unless you choose "Save as mine".
+- Export / import JSON (round-trips its own export; also reads photo-pipeline output).
 - Single HTML file. No backend. No tracking. No accounts.
-- **Installable as a PWA**: works fully offline after the first visit, launches full-screen with its own app icon.
+- **Installable as a PWA**: works fully offline after the first visit, with an "update available" prompt.
 
 ## Install on your phone
 
