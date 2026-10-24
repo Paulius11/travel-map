@@ -39,6 +39,8 @@
       --muted: #93a1c1;
       --amber: #F0883E;
       --danger: #ff7a88;
+      --wish: #2fb5a8;
+      --wish-hover: #52d6c8;
       --sidebar-w: 320px;
       --peek-total: calc(84px + env(safe-area-inset-bottom, 0px));
     }
@@ -99,13 +101,15 @@
     /* ── TABS ── */
     #tabs { display: flex; gap: 4px; padding: 0 12px 8px; flex-shrink: 0; }
     .tab {
-      flex: 1; background: transparent; border: 1px solid var(--border); border-radius: 8px;
-      color: var(--muted); cursor: pointer; font-size: 13px; font-weight: 600;
-      padding: 7px 4px; min-height: 36px; transition: all .15s; white-space: nowrap;
+      flex: 1; min-width: 0; background: transparent; border: 1px solid var(--border); border-radius: 10px;
+      color: var(--muted); cursor: pointer; padding: 5px 2px 6px; min-height: 46px; transition: all .15s;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
     }
     .tab:hover { color: var(--text); }
     .tab[aria-selected="true"] { background: rgba(240,136,62,.14); border-color: var(--amber); color: var(--amber); }
-    .tab-n { font-weight: 500; opacity: .85; margin-left: 2px; font-variant-numeric: tabular-nums; }
+    .tab[data-tab="wish"][aria-selected="true"] { background: rgba(47,181,168,.14); border-color: var(--wish); color: var(--wish-hover); }
+    .tab-n { font-size: 16px; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; }
+    .tab-l { font-size: 11px; font-weight: 600; white-space: nowrap; }
 
     /* ── REGION CHIPS ── */
     #chips {
@@ -153,6 +157,13 @@
     .csub { font-size: 11px; color: var(--muted); }
     .csub:empty { display: none; }
     .country-row.visited .cname { font-weight: 600; }
+    .row-wish {
+      flex-shrink: 0; width: 38px; background: none; border: none; cursor: pointer; border-radius: 8px;
+      font-size: 19px; line-height: 1; color: #6f7fa3; transition: color .15s;
+    }
+    .row-wish:hover { color: var(--wish-hover); }
+    .row-wish.on { color: var(--wish); }
+    .row-wish[hidden] { display: none; }
     .row-check {
       flex-shrink: 0; width: 44px; background: none; border: none; cursor: pointer;
       display: flex; align-items: center; justify-content: center; border-radius: 8px;
@@ -190,22 +201,27 @@
     .sphere { fill: var(--ocean); }
     .borders { fill: none; stroke: var(--cborder); stroke-width: .5; pointer-events: none; }
 
-    path.country { stroke: var(--cborder); stroke-width: .5; cursor: pointer;
+    .country { stroke: var(--cborder); stroke-width: .5; cursor: pointer;
       fill: var(--unvisited); fill-opacity: 1; transition: fill .2s, fill-opacity .2s, opacity .25s; }
-    path.country.territory { cursor: default; }
-    path.country.hovered:not(.visited) { fill: var(--unvisited-hover); }
-    path.country.visited { fill: var(--visited); }
-    path.country.visited.hovered { fill: var(--visited-hover); }
-    path.country.dimmed { opacity: 0.18; }
-    path.country.dimmed.hovered { opacity: 0.6; }
-    path.country.selected { stroke: #fff; stroke-width: 1.8px; vector-effect: non-scaling-stroke; }
+    .country.territory { cursor: default; }
+    .country.hovered:not(.visited) { fill: var(--unvisited-hover); }
+    .country.wish:not(.visited) { fill: var(--wish); }
+    .country.wish.hovered:not(.visited) { fill: var(--wish-hover); }
+    .country.visited { fill: var(--visited); }
+    .country.visited.hovered { fill: var(--visited-hover); }
+    circle.country.dot { stroke: #7f95c8; stroke-width: .8; }
+    circle.country.dot.visited { stroke: #ffd2a8; }
+    circle.country.dot.wish { stroke: #9af0e6; }
+    .country.dimmed { opacity: 0.18; }
+    .country.dimmed.hovered { opacity: 0.6; }
+    .country.selected { stroke: #fff; stroke-width: 1.8px; vector-effect: non-scaling-stroke; }
 
     @keyframes visitedPulse {
       0%   { fill: #ffe0c0; }
       50%  { fill: var(--visited-hover); }
       100% { fill: var(--visited); }
     }
-    path.country.just-marked { animation: visitedPulse .55s ease-out forwards; }
+    .country.just-marked { animation: visitedPulse .55s ease-out forwards; }
 
     .country-label {
       fill: rgba(255,255,255,0.82); font-size: 11px; text-anchor: middle;
@@ -235,6 +251,11 @@
     .hero-sub { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.35; }
     .hero-sub span:not(.sep) { display: block; }
     .hero-sub .sep { display: none; }
+    .hero-mode {
+      background: none; border: none; padding: 4px 0 0; margin-top: 2px; cursor: pointer;
+      font-size: 11px; color: var(--muted); text-align: left; text-decoration: underline dotted; text-underline-offset: 3px;
+    }
+    .hero-mode:hover { color: var(--text); }
     #hero.milestone, #pill.milestone { animation: milestone 1.2s ease-out; }
     @keyframes milestone {
       0%   { box-shadow: 0 0 0 0 rgba(240,136,62,.75); }
@@ -256,13 +277,14 @@
     .pill-ring .ring-bg, .pill-ring .ring-fg { stroke-width: 14; }
     #pill-n { color: var(--amber); }
     .pill-of { color: var(--muted); font-weight: 600; }
+    #hero { position: relative; }
     #share-btn {
-      align-self: flex-start; width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
+      position: absolute; top: 10px; right: 10px; width: 34px; height: 34px; border-radius: 9px; flex-shrink: 0;
       background: var(--card); border: 1px solid var(--border); cursor: pointer;
       display: flex; align-items: center; justify-content: center; transition: border-color .15s;
     }
     #share-btn:hover { border-color: var(--amber); color: var(--amber); }
-    #share-btn svg { width: 20px; height: 20px; }
+    #share-btn svg { width: 18px; height: 18px; }
 
     /* ── MAP CONTROLS ── */
     #map-controls { position: absolute; right: 16px; bottom: 16px; display: flex; flex-direction: column; gap: 6px; z-index: 5; }
@@ -280,7 +302,7 @@
       transform: translate(-50%, 24px); opacity: 0; pointer-events: none; visibility: hidden;
       width: min(440px, calc(100vw - 24px)); z-index: 150;
       background: var(--card); border: 1px solid var(--border); border-radius: 16px;
-      padding: 12px 12px 12px 16px; display: flex; align-items: center; gap: 12px;
+      padding: 12px 12px 12px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px;
       box-shadow: 0 10px 36px rgba(0,0,0,.55); transition: opacity .2s, transform .2s, visibility .2s;
     }
     #country-card.open { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; visibility: visible; }
@@ -288,6 +310,14 @@
     #card-info { flex: 1; min-width: 0; }
     #card-name { font-size: 16px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     #card-sub { font-size: 12px; color: var(--muted); margin-top: 2px; line-height: 1.35; }
+    #card-actions { flex-basis: 100%; display: flex; gap: 8px; }
+    #card-actions > button { flex: 1; }
+    #card-wish {
+      border-radius: 10px; border: 1px solid rgba(47,181,168,.55); background: transparent; color: var(--wish-hover);
+      font-weight: 700; font-size: 14px; padding: 10px 14px; cursor: pointer; min-height: 42px; white-space: nowrap;
+    }
+    #card-wish.on { background: rgba(47,181,168,.18); }
+    #card-wish[hidden] { display: none; }
     #card-action {
       border-radius: 10px; border: 1px solid var(--amber); background: var(--amber); color: #1a1a1a;
       font-weight: 700; font-size: 14px; padding: 10px 14px; cursor: pointer; min-height: 42px; white-space: nowrap;
@@ -406,7 +436,8 @@
       .hero-sub { font-size: 11px; margin-top: 1px; }
       .hero-sub span:not(.sep) { display: inline; }
       .hero-sub .sep { display: inline; }
-      #share-btn { align-self: center; }
+      #share-btn { top: 50%; transform: translateY(-50%); }
+      .hero-main { padding-right: 44px; }
       #pill {
         left: 10px; bottom: auto; pointer-events: auto; cursor: pointer;
         top: calc(env(safe-area-inset-top, 0px) + var(--top-off, 0px) + 10px);
@@ -414,7 +445,7 @@
       #map-controls { right: 12px; bottom: calc(var(--peek-total) + 14px); }
       #country-card { left: 50%; bottom: calc(var(--peek-total) + 12px); }
       #toast-container { bottom: calc(var(--peek-total) + 12px); left: 12px; right: 12px; align-items: stretch; }
-      body.card-open #toast-container { bottom: calc(var(--peek-total) + 100px); }
+      body.card-open #toast-container { bottom: calc(var(--peek-total) + 150px); }
       .toast { max-width: none; }
       .sidebar-footer .danger-link { margin-left: auto; }
     }
@@ -450,15 +481,17 @@
         <div class="hero-count"><span id="hero-n">0</span><span class="hero-of">/ <span id="hero-total">0</span></span></div>
         <div class="hero-label">countries visited</div>
         <div class="hero-sub" id="hero-sub"></div>
+        <button class="hero-mode" id="count-mode" role="switch" aria-checked="true"></button>
       </div>
       <button id="share-btn" aria-label="Share your map">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v7a2 2 0 002 2h12a2 2 0 002-2v-7"/><path d="M16 6l-4-4-4 4"/><path d="M12 2v14"/></svg>
       </button>
     </div>
       <div id="tabs" role="tablist" aria-label="Show countries">
-        <button class="tab" role="tab" data-tab="visited" aria-selected="false">Visited <span class="tab-n" id="tabn-visited">0</span></button>
-        <button class="tab" role="tab" data-tab="unvisited" aria-selected="false">Not yet <span class="tab-n" id="tabn-unvisited">0</span></button>
-        <button class="tab" role="tab" data-tab="all" aria-selected="true">All <span class="tab-n" id="tabn-all">0</span></button>
+        <button class="tab" role="tab" data-tab="visited" aria-selected="false"><span class="tab-n" id="tabn-visited">0</span><span class="tab-l">Visited</span></button>
+        <button class="tab" role="tab" data-tab="wish" aria-selected="false"><span class="tab-n" id="tabn-wish">0</span><span class="tab-l">Wishlist</span></button>
+        <button class="tab" role="tab" data-tab="unvisited" aria-selected="false"><span class="tab-n" id="tabn-unvisited">0</span><span class="tab-l">Not yet</span></button>
+        <button class="tab" role="tab" data-tab="all" aria-selected="true"><span class="tab-n" id="tabn-all">0</span><span class="tab-l">All</span></button>
       </div>
       <div id="chips" role="group" aria-label="Filter by region"></div>
       <ul id="country-list" role="list" aria-label="Countries"></ul>
@@ -491,8 +524,11 @@
     <div id="card-name"></div>
     <div id="card-sub"></div>
   </div>
-  <button id="card-action">Mark visited</button>
   <button id="card-close" aria-label="Close">×</button>
+  <div id="card-actions">
+    <button id="card-action">Mark visited</button>
+    <button id="card-wish">♡ Want to go</button>
+  </div>
 </div>
 <div id="tooltip"></div>
 <div id="toast-container" role="status" aria-live="polite"></div>
@@ -721,7 +757,9 @@ for (const [a2, num] of Object.entries(ALPHA2_TO_NUMERIC)) {
 // Only "real" countries (the ones in COUNTRY_DATA) are countable. Extra map
 // shapes auto-registered below (synthetic T### codes) are never counted.
 const COUNTABLE = new Set(ALL_COUNTRIES.map(c => c.alpha2));
-const TOTAL = ALL_COUNTRIES.length;
+const ALL_TOTAL = ALL_COUNTRIES.length;
+// 10 entries are not UN member states (observers, territories, Antarctica, ...).
+const UN_EXCLUDED = new Set(['AQ','EH','FK','NC','PR','GL','TW','PS','VA','XK']);
 
 const $ = id => document.getElementById(id);
 const REDUCED  = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -742,17 +780,22 @@ const state = {
   visitedDates: {},     // { alpha2: "YYYY-MM-DD" }
   search: '',
   continent: '',
-  tab: 'all',           // 'visited' | 'unvisited' | 'all'
+  tab: 'all',           // 'visited' | 'wish' | 'unvisited' | 'all'
+  wishlist: new Set(),  // countries you want to visit (never overlaps visited)
+  countMode: 'un',      // 'un' = 193 UN member states, 'all' = every entry in the list
   selected: null,       // alpha2 shown in the country card
   shared: false,        // true while previewing someone else's shared link
   hoveredAlpha2: null,
 };
 
+// Does this country count toward the headline number?
+const isCounted = a2 => COUNTABLE.has(a2) && (state.countMode === 'all' || !UN_EXCLUDED.has(a2));
+
 
 // ═══════════════════════════════════════════════════════════════
 // D — MAP INIT
 // ═══════════════════════════════════════════════════════════════
-let svg, g, zoom, geoPath, projection, gLabels;
+let svg, g, zoom, geoPath, projection, gLabels, gDots;
 let mapWidth, mapHeight;
 
 const TOPO_FEATURES = topojson.feature(WORLD_TOPO, WORLD_TOPO.objects.countries).features;
@@ -787,6 +830,22 @@ const NO_POLYGON = new Set(
   })
 );
 
+// Countries too small for the 110m map are drawn as dots at these [lon, lat].
+const DOT_COORDS = {
+  AD:[1.52,42.55], AG:[-61.8,17.1], BB:[-59.55,13.19], BH:[50.55,26.07], BN:[114.7,4.5],
+  CV:[-23.6,15.1], DM:[-61.37,15.41], FM:[158.2,6.9], GD:[-61.68,12.12], KI:[173.0,1.45],
+  KM:[43.87,-11.65], KN:[-62.75,17.33], LC:[-60.98,13.91], LI:[9.55,47.16], MC:[7.42,43.74],
+  MH:[171.2,7.1], MT:[14.4,35.9], MU:[57.55,-20.35], MV:[73.5,3.2], NR:[166.93,-0.52],
+  PW:[134.58,7.5], SC:[55.45,-4.68], SG:[103.82,1.35], SM:[12.46,43.94], ST:[6.61,0.34],
+  TO:[-175.2,-21.18], TT:[-61.3,10.7], TV:[179.2,-8.52], VA:[12.45,41.9], VC:[-61.2,13.25],
+  WS:[-172.1,-13.76], XK:[20.9,42.6], NC:[165.6,-21.3], PR:[-66.5,18.2], PS:[35.2,31.9],
+  CY:[33.4,35.1], LU:[6.13,49.8], SZ:[31.5,-26.5], DJ:[42.6,11.8], BZ:[-88.5,17.2],
+};
+const DOTS = Object.keys(DOT_COORDS)
+  .filter(a2 => NO_POLYGON.has(a2) && COUNTRIES[a2])
+  .map(a2 => ({ a2, lon: DOT_COORDS[a2][0], lat: DOT_COORDS[a2][1] }));
+const DOT_SET = new Set(DOTS.map(d => d.a2));
+
 
 // ═══════════════════════════════════════════════════════════════
 // D — MAP INIT
@@ -820,9 +879,11 @@ function initMap() {
       g.attr('transform', event.transform);
       const k = event.transform.k;
       g.selectAll('path.country').attr('stroke-width', 0.5 / k);
+      if (gDots) gDots.selectAll('circle').attr('r', dotRadius(k)).attr('stroke-width', 0.8 / k);
+      curK = k;
       g.select('.borders').attr('stroke-width', 0.5 / k);
       if (gLabels) {
-        const show = k >= 2.5;
+        const show = k >= (mapWidth < 700 ? 5 : 2.5);  // fewer labels fit on a phone
         gLabels.style('display', show ? null : 'none');
         if (show) gLabels.selectAll('text')
           .style('font-size', (11 / k) + 'px')
@@ -840,8 +901,14 @@ function initMap() {
   g.append('path').datum(TOPO_MESH)
     .attr('class', 'borders').attr('d', geoPath);
 
+  gDots = g.append('g').attr('class', 'dots-layer');
+  renderDots();
+
   gLabels = g.append('g').attr('class', 'labels-layer').style('display', 'none');
   renderLabels();
+
+  // Start on a view that makes sense for this screen (zoomed in on portrait phones).
+  svg.call(zoom.transform, homeTransform());
 
   // Responsive resize: keep the user's current view instead of resetting it.
   new ResizeObserver(() => {
@@ -857,6 +924,7 @@ function initMap() {
     svg.select('.graticule').attr('d', geoPath(d3.geoGraticule()()));
     g.selectAll('path.country').attr('d', geoPath);
     g.select('.borders').attr('d', geoPath);
+    renderDots();
     renderLabels();
     const nx = -t.k * cNew[0] + t.k * rw * cOld[0] + t.x * rw - cOld[0] * rw + cNew[0];
     const ny = -t.k * cNew[1] + t.k * rw * cOld[1] + t.y * rw - cOld[1] * rw + cNew[1];
@@ -869,7 +937,9 @@ function initMap() {
 // E — MAP RENDER & COLORS
 // ═══════════════════════════════════════════════════════════════
 const tooltip = $('tooltip');
-const a2OfFeature = d => NUMERIC_TO_ALPHA2[String(+d.id)];
+const a2OfFeature = d => d.a2 || NUMERIC_TO_ALPHA2[String(+d.id)];
+let curK = 1;
+const dotRadius = k => (isCoarse() ? 5 : 3.5) / k;
 
 function renderCountries() {
   g.selectAll('path.country')
@@ -879,6 +949,14 @@ function renderCountries() {
     .attr('d', geoPath)
     .attr('role', 'button')
     .attr('aria-label', d => { const a2 = a2OfFeature(d); return a2 && COUNTRIES[a2] ? COUNTRIES[a2].name : null; })
+    .call(bindCountryEvents);
+
+  updateMapColors();
+}
+
+// Hover/click behaviour shared by country shapes and the small-country dots.
+function bindCountryEvents(sel) {
+  sel
     .on('mouseover', function(event, d) {
       if (isCoarse()) return;
       const a2 = a2OfFeature(d);
@@ -916,8 +994,22 @@ function renderCountries() {
       } else {
         showToast(`${COUNTRIES[a2].name} is a territory and isn't counted`, 'warning');
       }
-    });
+    });;
+}
 
+function renderDots() {
+  if (!gDots) return;
+  gDots.selectAll('circle.country')
+    .data(DOTS, d => d.a2)
+    .join('circle')
+    .attr('class', 'country dot')
+    .attr('cx', d => projection([d.lon, d.lat])[0])
+    .attr('cy', d => projection([d.lon, d.lat])[1])
+    .attr('r', dotRadius(curK))
+    .attr('stroke-width', 0.8 / curK)
+    .attr('role', 'button')
+    .attr('aria-label', d => COUNTRIES[d.a2].name)
+    .call(bindCountryEvents);
   updateMapColors();
 }
 
@@ -925,12 +1017,13 @@ function updateMapColors() {
   const counts = Object.values(state.photoCounts);
   const maxPhotos = counts.length ? Math.max(...counts) : 1;
 
-  g.selectAll('path.country').each(function(d) {
+  g.selectAll('.country').each(function(d) {
     const a2 = a2OfFeature(d);
     if (!a2) return;
     const e = d3.select(this);
     const isVisited = state.visited.has(a2);
-    e.classed('visited', isVisited).classed('unvisited', !isVisited);
+    e.classed('visited', isVisited).classed('unvisited', !isVisited)
+      .classed('wish', !isVisited && state.wishlist.has(a2));
     if (COUNTABLE.has(a2)) e.attr('aria-pressed', isVisited);
     // Inline style beats the stylesheet: countries with more photos are more opaque.
     const count = state.photoCounts[a2] || 0;
@@ -941,7 +1034,7 @@ function updateMapColors() {
 }
 
 function updateSelectedClass() {
-  g.selectAll('path.country').classed('selected', d => a2OfFeature(d) === state.selected);
+  g.selectAll('.country').classed('selected', d => a2OfFeature(d) === state.selected);
 }
 
 function labelCentroid(feature) {
@@ -978,6 +1071,13 @@ function renderLabels() {
     })
     .filter(function() { return !this.getAttribute('transform'); })
     .remove();
+  gLabels.selectAll('text.dot-label')
+    .data(DOTS)
+    .join('text')
+    .attr('class', 'country-label dot-label')
+    .attr('transform', d => { const p = projection([d.lon, d.lat]); return `translate(${p[0]},${p[1]})`; })
+    .attr('dy', '-0.95em')
+    .text(d => COUNTRIES[d.a2].name);
 }
 
 function moveTooltip(event) {
@@ -988,9 +1088,7 @@ function moveTooltip(event) {
 }
 
 function pulseMapCountry(a2) {
-  const numId = ALPHA2_TO_NUMERIC[a2];
-  if (!numId) return;
-  const sel = g.selectAll('path.country').filter(d => parseInt(d.id) === numId);
+  const sel = g.selectAll('.country').filter(d => a2OfFeature(d) === a2);
   sel.classed('just-marked', true);
   setTimeout(() => sel.classed('just-marked', false), 600);
 }
@@ -1018,6 +1116,7 @@ function afterChange(a2) {
 function setVisited(a2, on, snap) {
   if (!COUNTABLE.has(a2)) return;
   if (on) {
+    if (state.wishlist.delete(a2)) saveWish(); // you've been there now
     state.visited.add(a2);
     if (snap && snap.photos) state.photoCounts[a2] = snap.photos;
     if (snap && snap.date)   state.visitedDates[a2] = snap.date;
@@ -1035,6 +1134,7 @@ function toggleCountry(a2) {
     return;
   }
   const c = COUNTRIES[a2];
+  const wasWish = state.wishlist.has(a2);
   if (state.visited.has(a2)) {
     const snap = { photos: state.photoCounts[a2], date: state.visitedDates[a2] };
     setVisited(a2, false);
@@ -1043,11 +1143,41 @@ function toggleCountry(a2) {
   } else {
     setVisited(a2, true);
     pulseMapCountry(a2);
-    const msg = NO_POLYGON.has(a2)
+    const msg = NO_POLYGON.has(a2) && !DOT_SET.has(a2)
       ? `${c.flag} ${c.name} added (too small to show on the map)`
       : `${c.flag} ${c.name} added`;
-    showToast(msg, 'success', { action: { label: 'Undo', fn: () => setVisited(a2, false) } });
+    showToast(msg, 'success', { action: { label: 'Undo', fn: () => { setVisited(a2, false); if (wasWish) setWish(a2, true); } } });
   }
+}
+
+// ── Wishlist ("want to go") ──
+const WISH_KEY = 'travelTracker_wish';
+function saveWish() {
+  try { localStorage.setItem(WISH_KEY, JSON.stringify([...state.wishlist])); } catch(e) {}
+}
+function loadWish() {
+  try {
+    const d = JSON.parse(localStorage.getItem(WISH_KEY) || '[]');
+    if (Array.isArray(d)) d.forEach(a2 => { if (COUNTABLE.has(a2) && !state.visited.has(a2)) state.wishlist.add(a2); });
+  } catch(e) {}
+}
+function setWish(a2, on) {
+  if (!COUNTABLE.has(a2)) return;
+  if (on) { if (state.visited.has(a2)) return; state.wishlist.add(a2); }
+  else state.wishlist.delete(a2);
+  saveWish();
+  updateMapColors();
+  updateStats();
+  refreshRow(a2);
+  renderCard();
+}
+function toggleWish(a2) {
+  if (!COUNTABLE.has(a2) || state.visited.has(a2)) return;
+  const c = COUNTRIES[a2];
+  const was = state.wishlist.has(a2);
+  setWish(a2, !was);
+  showToast(was ? `${c.flag} ${c.name} removed from wishlist` : `${c.flag} ${c.name} added to wishlist`, 'info',
+    { action: { label: 'Undo', fn: () => setWish(a2, was) } });
 }
 
 function snapshot() {
@@ -1099,6 +1229,14 @@ function fitBounds(x0, y0, x1, y1) {
 }
 
 function flyToCountry(a2) {
+  const dot = DOTS.find(d => d.a2 === a2);
+  if (dot) {
+    const [px, py] = projection([dot.lon, dot.lat]);
+    const k = 7;
+    svg.transition().duration(dur(750)).ease(d3.easeCubicInOut)
+      .call(zoom.transform, d3.zoomIdentity.translate(mapWidth / 2 - k * px, mapHeight / 2 - k * py).scale(k));
+    return;
+  }
   if (NO_POLYGON.has(a2)) return;
   const numId = ALPHA2_TO_NUMERIC[a2];
   const feature = TOPO_FEATURES.find(f => parseInt(f.id) === numId);
@@ -1107,9 +1245,32 @@ function flyToCountry(a2) {
   fitBounds(x0, y0, x1, y1);
 }
 
+// The "home" view: the whole world on wide screens; on a portrait phone the world is only
+// as wide as the screen, so start zoomed in around where you've been (or Europe/Africa).
+function homeTransform() {
+  if (!(isMobile() && mapHeight > mapWidth)) return d3.zoomIdentity;
+  // Fill most of the map's height, but never zoom in further than ~3.4x.
+  const sh = geoPath.bounds({ type: 'Sphere' });
+  const k = Math.max(2, Math.min(3.4, mapHeight * 0.72 / (sh[1][1] - sh[0][1])));
+  let sx = 0, sy = 0, n = 0;
+  for (const a2 of state.visited) {
+    const f = TOPO_FEATURES.find(f => parseInt(f.id) === ALPHA2_TO_NUMERIC[a2]);
+    const p = f ? projection(labelCentroid(f)) : (DOT_SET.has(a2) ? projection(DOT_COORDS[a2]) : null);
+    if (p) { sx += p[0]; sy += p[1]; n++; }
+  }
+  const c = n ? [sx / n, sy / n] : projection([20, 38]);
+  let tx = mapWidth / 2 - k * c[0], ty = mapHeight / 2 - k * c[1];
+  // Keep the map from drifting off-screen: no empty ocean above/below/beside it where avoidable.
+  const clamp = (v, a, b) => Math.min(Math.max(v, Math.min(a, b)), Math.max(a, b));
+  const top = clamp(ty + k * sh[0][1], 56, mapHeight - 90 - k * (sh[1][1] - sh[0][1]));
+  const left = clamp(tx + k * sh[0][0], 0, mapWidth - k * (sh[1][0] - sh[0][0]));
+  ty = top - k * sh[0][1]; tx = left - k * sh[0][0];
+  return d3.zoomIdentity.translate(tx, ty).scale(k);
+}
+
 function resetView() {
   svg.transition().duration(dur(550)).ease(d3.easeCubicInOut)
-    .call(zoom.transform, d3.zoomIdentity);
+    .call(zoom.transform, homeTransform());
 }
 
 function flyToContinent(cc) {
@@ -1136,7 +1297,7 @@ function flyToContinent(cc) {
 
 function updateContinentHighlight() {
   const cc = state.continent;
-  g.selectAll('path.country').classed('dimmed', function(d) {
+  g.selectAll('.country').classed('dimmed', function(d) {
     if (!cc) return false;
     const a2 = a2OfFeature(d);
     return !!a2 && COUNTRIES[a2] && COUNTRIES[a2].continent !== cc;
@@ -1184,21 +1345,29 @@ function renderCard() {
 
   const bits = [continentName(c.continent)];
   if (!countable) bits.push('territory, not counted');
+  else if (!isCounted(a2)) bits.push('not a UN member, not counted');
+  if (!countable) { /* nothing more */ }
   else if (v) {
     bits.push('✓ Visited');
     if (state.visitedDates[a2]) bits.push('📅 ' + state.visitedDates[a2]);
     if (state.photoCounts[a2])  bits.push('📷 ' + state.photoCounts[a2].toLocaleString());
-  } else bits.push('Not visited yet');
-  if (NO_POLYGON.has(a2)) bits.push('too small to show on the map');
+  } else bits.push(state.wishlist.has(a2) ? '♥ On your wishlist' : 'Not visited yet');
+  if (NO_POLYGON.has(a2)) bits.push(DOT_SET.has(a2) ? 'shown as a dot on the map' : 'too small to show on the map');
   $('card-sub').textContent = bits.join(' · ');
 
   const btn = $('card-action');
   btn.hidden = !countable;
   btn.textContent = v ? 'Remove' : 'Mark visited';
   btn.classList.toggle('remove', v);
+  const wbtn = $('card-wish');
+  const w = state.wishlist.has(a2);
+  wbtn.hidden = !countable || v;
+  wbtn.textContent = w ? '♥ On wishlist' : '♡ Want to go';
+  wbtn.classList.toggle('on', w);
 }
 
 $('card-action').addEventListener('click', () => { if (state.selected) toggleCountry(state.selected); });
+$('card-wish').addEventListener('click', () => { if (state.selected) toggleWish(state.selected); });
 $('card-close').addEventListener('click', clearSelection);
 
 // ═══════════════════════════════════════════════════════════════
@@ -1225,7 +1394,12 @@ function buildRow(c) {
   check.setAttribute('role', 'checkbox');
   check.append(el('span', 'country-checkbox'));
 
-  li.append(main, check);
+  const wish = el('button', 'row-wish', '♡');
+  wish.type = 'button';
+  wish.tabIndex = -1;
+  wish.setAttribute('role', 'checkbox');
+
+  li.append(main, wish, check);
   rowEls[c.alpha2] = li;
   refreshRow(c.alpha2);
   return li;
@@ -1239,26 +1413,83 @@ function refreshRow(a2) {
   const check = li.querySelector('.row-check');
   check.setAttribute('aria-checked', v);
   check.setAttribute('aria-label', `${COUNTRIES[a2].name}: ${v ? 'visited' : 'not visited'}`);
+  const w = state.wishlist.has(a2) && !v;
+  const wish = li.querySelector('.row-wish');
+  wish.hidden = v;
+  wish.classList.toggle('on', w);
+  wish.textContent = w ? '♥' : '♡';
+  wish.setAttribute('aria-checked', w);
+  wish.setAttribute('aria-label', `${COUNTRIES[a2].name}: ${w ? 'on' : 'not on'} your wishlist`);
   const sub = [];
   if (v && state.visitedDates[a2]) sub.push('📅 ' + state.visitedDates[a2]);
   if (v && state.photoCounts[a2])  sub.push('📷 ' + state.photoCounts[a2].toLocaleString());
+  if (w) sub.push('♥ Want to go');
+  if (!isCounted(a2)) sub.push('not counted (not a UN member)');
   li.querySelector('.csub').textContent = sub.join(' · ');
 }
 
+// Lower-case, strip accents and punctuation so "Côte d'Ivoire" matches "cote d ivoire".
+const norm = t => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  .replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+
+// Other names people type. The list shows short names like "Cent. African Republic".
+const ALIASES = {
+  US: ['usa', 'us', 'america', 'united states of america'],
+  GB: ['uk', 'britain', 'great britain', 'england', 'scotland', 'wales', 'northern ireland'],
+  NL: ['holland'], CZ: ['czech republic'], CI: ['ivory coast'], MM: ['burma'],
+  CD: ['democratic republic of the congo', 'drc', 'congo kinshasa'],
+  CG: ['republic of the congo', 'congo brazzaville'],
+  CF: ['central african republic', 'car'], SZ: ['swaziland'], MK: ['macedonia'],
+  TR: ['turkiye'], TL: ['east timor'], CV: ['cabo verde'], BA: ['bosnia'],
+  AE: ['uae', 'emirates', 'dubai', 'abu dhabi'], RU: ['russian federation'],
+  KR: ['korea', 'republic of korea'], KP: ['korea', 'dprk'],
+  TW: ['republic of china', 'formosa'], CN: ['prc', 'peoples republic of china'],
+  IR: ['persia'], LA: ['lao'], VN: ['viet nam'], DE: ['deutschland'],
+  CH: ['schweiz', 'suisse'], ES: ['espana'], GR: ['hellas'], FI: ['suomi'],
+  JP: ['nippon'], AT: ['osterreich'], BY: ['belorussia'], BN: ['brunei darussalam'],
+  FK: ['malvinas'], FM: ['fsm'], PG: ['png'], TT: ['trinidad', 'tobago'],
+  AG: ['antigua', 'barbuda'], KN: ['st kitts', 'nevis'], LC: ['st lucia'],
+  VC: ['saint vincent and the grenadines', 'saint vincent'], ST: ['sao tome and principe'],
+  NZ: ['nz', 'aotearoa'], GM: ['the gambia'], BS: ['the bahamas'],
+  VA: ['holy see', 'vatican'], PS: ['gaza', 'west bank'], SA: ['saudi'],
+};
+const SEARCH_INDEX = ALL_COUNTRIES.map(c => ({
+  c,
+  code: c.alpha2.toLowerCase(),
+  names: [norm(c.name), ...(ALIASES[c.alpha2] || []).map(norm)],
+}));
+
+// 0 = exact ISO code, 1 = exact name, 2 = name starts with, 3 = a word starts with, 4 = contains.
+function searchScore(entry, q) {
+  if (entry.code === q) return 0;
+  let best = 99;
+  for (const n of entry.names) {
+    let sc = 99;
+    if (n === q) sc = 1;
+    else if (n.startsWith(q)) sc = 2;
+    else if (n.includes(' ' + q)) sc = 3;
+    else if (n.includes(q)) sc = 4;
+    if (sc < best) best = sc;
+  }
+  return best;
+}
+
 function listMatches() {
-  const q = state.search.trim().toLowerCase();
+  const q = norm(state.search);
   if (q) {
-    // Searching looks at every country, best matches (prefix) first.
-    return ALL_COUNTRIES
-      .filter(c => c.name.toLowerCase().includes(q))
-      .sort((a, b) => (b.name.toLowerCase().startsWith(q) - a.name.toLowerCase().startsWith(q)) ||
-                      a.name.localeCompare(b.name));
+    // Searching looks at every country, best matches first.
+    return SEARCH_INDEX
+      .map(e => ({ c: e.c, sc: searchScore(e, q) }))
+      .filter(x => x.sc < 99)
+      .sort((a, b) => a.sc - b.sc || a.c.name.localeCompare(b.c.name))
+      .map(x => x.c);
   }
   return ALL_COUNTRIES.filter(c => {
     if (state.continent && c.continent !== state.continent) return false;
     const v = state.visited.has(c.alpha2);
     if (state.tab === 'visited'   && !v) return false;
     if (state.tab === 'unvisited' &&  v) return false;
+    if (state.tab === 'wish' && !(state.wishlist.has(c.alpha2) && !v)) return false;
     return true;
   });
 }
@@ -1267,6 +1498,9 @@ function emptyState(q) {
   const box = el('li', 'empty');
   if (q) {
     box.append(el('strong', null, 'No matches'), `Nothing is called “${state.search.trim()}”.`);
+  } else if (state.tab === 'wish') {
+    box.append(el('strong', null, state.continent ? 'No wishlist places here' : 'Your wishlist is empty'),
+      'Tap ♡ on a country, or choose “Want to go” on its card, to plan where to next.');
   } else if (state.tab === 'visited') {
     box.append(el('strong', null, state.continent ? 'Nothing visited here yet' : 'No countries yet'),
       'Tap a country on the map, or search above to add one.');
@@ -1386,6 +1620,7 @@ $('country-list').addEventListener('click', e => {
   if (!li) return;
   const a2 = li.dataset.a2;
   if (e.target.closest('.row-check')) toggleCountry(a2);
+  else if (e.target.closest('.row-wish')) toggleWish(a2);
   else selectCountry(a2);
 });
 
@@ -1397,6 +1632,7 @@ $('country-list').addEventListener('keydown', e => {
   if (e.key === 'ArrowDown' && rows[i + 1]) { e.preventDefault(); rows[i + 1].focus(); }
   else if (e.key === 'ArrowUp') { e.preventDefault(); (rows[i - 1] || $('search-input')).focus(); }
   else if (e.key === ' ') { e.preventDefault(); toggleCountry(btn.closest('.country-row').dataset.a2); }
+  else if (e.key === 'w' || e.key === 'W') { e.preventDefault(); toggleWish(btn.closest('.country-row').dataset.a2); }
 });
 
 $('country-list').addEventListener('focusin', e => {
@@ -1612,6 +1848,13 @@ function importLocationsJSON(text) {
     for (const [a2, d] of Object.entries(data.visitedDates || {})) {
       if (state.visited.has(a2) && typeof d === 'string') state.visitedDates[a2] = d;
     }
+    if (Array.isArray(data.wishlist)) {
+      for (const raw of data.wishlist) {
+        const a2 = String(raw).toUpperCase().trim();
+        if (COUNTABLE.has(a2) && !state.visited.has(a2)) state.wishlist.add(a2);
+      }
+      saveWish();
+    }
   } else {
     // Photo-pipeline output: plain array or {locations, no_gps}
     const locations = Array.isArray(data) ? data : (data && data.locations ? data.locations : []);
@@ -1643,6 +1886,8 @@ function importLocationsJSON(text) {
     }
   }
 
+  for (const a2 of state.visited) state.wishlist.delete(a2);
+  saveWish();
   const newCount = [...state.visited].filter(a2 => !before.has(a2)).length;
   afterChange(null);
   showToast(`Imported: ${state.visited.size} countries total, ${newCount} new`, 'success');
@@ -1654,6 +1899,7 @@ function exportVisitedJSON() {
     visited:      [...state.visited].sort(),
     photoCounts:  state.photoCounts,
     visitedDates: state.visitedDates,
+    wishlist:     [...state.wishlist].sort(),
   };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const url  = URL.createObjectURL(blob);
@@ -1678,13 +1924,18 @@ $('import-btn').addEventListener('click', () => {
 // ═══════════════════════════════════════════════════════════════
 // N — STATS & HERO
 // ═══════════════════════════════════════════════════════════════
-// Per-region totals and total land area never change, so compute them once.
-const CONT_TOTALS = {};
-let LAND_TOTAL = 0;
-for (const c of ALL_COUNTRIES) {
-  CONT_TOTALS[c.continent] = (CONT_TOTALS[c.continent] || 0) + 1;
-  LAND_TOTAL += COUNTRY_AREAS[c.alpha2] || 0;
+// Totals depend on the counting mode (UN members vs everything), so recompute on change.
+let TOTAL = ALL_TOTAL, LAND_TOTAL = 0, CONT_TOTALS = {};
+function recomputeTotals() {
+  TOTAL = 0; LAND_TOTAL = 0; CONT_TOTALS = {};
+  for (const c of ALL_COUNTRIES) {
+    if (!isCounted(c.alpha2)) continue;
+    TOTAL++;
+    CONT_TOTALS[c.continent] = (CONT_TOTALS[c.continent] || 0) + 1;
+    LAND_TOTAL += COUNTRY_AREAS[c.alpha2] || 0;
+  }
 }
+const COUNT_KEY = 'travelTracker_count';
 let contVisited = {};
 let lastCount = null, shownN = 0, countRaf = 0, milestoneTimer, srTimer;
 const MILESTONES = [10, 25, 50, 100, 150];
@@ -1707,10 +1958,12 @@ function animateCount(to, instant) {
 }
 
 function updateStats() {
-  const n = state.visited.size;
-  let landVis = 0;
+  const nAll = state.visited.size;
+  let n = 0, landVis = 0;
   contVisited = {};
   for (const a2 of state.visited) {
+    if (!isCounted(a2)) continue;
+    n++;
     landVis += COUNTRY_AREAS[a2] || 0;
     const cc = COUNTRIES[a2].continent;
     contVisited[cc] = (contVisited[cc] || 0) + 1;
@@ -1727,13 +1980,22 @@ function updateStats() {
   $('ring-fg').style.strokeDashoffset = RING_C * (1 - n / TOTAL);
   $('pill-ring-fg').style.strokeDashoffset = RING_C * (1 - n / TOTAL);
   const sub = $('hero-sub');
+  const parts = [];
   if (n) {
-    const a = el('span', null, `${landPct < 10 ? landPct.toFixed(1) : Math.round(landPct)}% of world land`);
-    const b = el('span', null, `${regions} of ${CONTINENTS.length} regions`);
-    sub.replaceChildren(a, el('span', 'sep', ' · '), b);
+    parts.push(`${landPct < 10 ? landPct.toFixed(1) : Math.round(landPct)}% of world land`);
+    parts.push(`${regions} of ${CONTINENTS.length} regions`);
   } else {
-    sub.textContent = 'Tap any country on the map to start your list';
+    parts.push('Tap a country to start your list');
   }
+  const extras = [];
+  if (state.wishlist.size) extras.push(`♥ ${state.wishlist.size} want to go`);
+  if (nAll - n) extras.push(`+${nAll - n} not counted`);
+  if (extras.length) parts.push(extras.join(' · '));
+  sub.replaceChildren(...parts.flatMap((t, i) => i ? [el('span', 'sep', ' · '), el('span', null, t)] : [el('span', null, t)]));
+  const modeBtn = $('count-mode');
+  modeBtn.textContent = state.countMode === 'un' ? `Counting UN members (${TOTAL})` : `Counting all ${TOTAL} places`;
+  modeBtn.setAttribute('aria-checked', state.countMode === 'un');
+  modeBtn.title = 'Switch between UN member states and every country, territory and region in the list';
   document.title = n ? `My Travel Map · ${n} countr${n === 1 ? 'y' : 'ies'}` : 'My Travel Map';
 
   clearTimeout(srTimer);
@@ -1750,9 +2012,10 @@ function updateStats() {
   lastCount = n;
 
   // Tabs
-  $('tabn-visited').textContent   = n;
-  $('tabn-unvisited').textContent = TOTAL - n;
-  $('tabn-all').textContent       = TOTAL;
+  $('tabn-visited').textContent   = nAll;
+  $('tabn-wish').textContent      = state.wishlist.size;
+  $('tabn-unvisited').textContent = ALL_TOTAL - nAll;
+  $('tabn-all').textContent       = ALL_TOTAL;
 
   // Chips
   document.querySelectorAll('.chip').forEach(b => {
@@ -1765,6 +2028,17 @@ function updateStats() {
 
   updateHeads();
 }
+
+$('count-mode').addEventListener('click', () => {
+  state.countMode = state.countMode === 'un' ? 'all' : 'un';
+  try { localStorage.setItem(COUNT_KEY, state.countMode); } catch(e) {}
+  recomputeTotals();
+  lastCount = null;                       // no milestone / count-up when the basis changes
+  Object.keys(rowEls).forEach(refreshRow);
+  updateStats();
+  renderCard();
+  showToast(state.countMode === 'un' ? `Counting the ${TOTAL} UN member states` : `Counting all ${TOTAL} places`, 'info');
+});
 
 // On phones the pill is the only always-visible count: tap it for the full card.
 $('pill').addEventListener('click', () => {
@@ -1919,6 +2193,8 @@ handle.addEventListener('keydown', e => {
 // R — INIT
 // ═══════════════════════════════════════════════════════════════
 (function init() {
+  try { if (localStorage.getItem(COUNT_KEY) === 'all') state.countMode = 'all'; } catch(e) {}
+  recomputeTotals();
   const hashCodes = parseHash();
   const local = readLocal();
 
@@ -1930,6 +2206,7 @@ handle.addEventListener('keydown', e => {
     state.photoCounts = local.photoCounts;
     state.visitedDates = local.visitedDates;
   }
+  loadWish();
   state.tab = state.visited.size ? 'visited' : 'all';
   document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === state.tab));
 
