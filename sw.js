@@ -1,6 +1,6 @@
 // Travel Map — service worker
 // Bump CACHE_VERSION whenever index.html or icons change to force clients to refresh.
-const CACHE_VERSION = 'v2';
+const CACHE_VERSION = 'v3';
 const CACHE_NAME = `travel-map-${CACHE_VERSION}`;
 
 const PRECACHE_URLS = [
