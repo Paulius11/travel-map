@@ -8,7 +8,11 @@ Installable PWA that tracks countries you've visited on an interactive dark-them
 
 - **Progress hero** — on open you see "N / total countries visited" with a progress ring, % of world land and regions covered. It counts up as you add countries and celebrates 10/25/50/100/150.
 - Interactive D3 + TopoJSON world map with pan, zoom, +/- controls and click-to-toggle. On touch screens the first tap opens a country card, so stray taps never change anything.
-- **Search that navigates** — type a country, press Enter to fly to it and open its card; arrow keys and Space work from the keyboard.
+- **UN-member count** — the headline counts the 193 UN member states by default; one tap switches to all 203 places (adds territories, Antarctica, Taiwan, Kosovo, ...). Non-UN places you've visited are still shown, tagged "not counted".
+- **Wishlist** — mark countries you want to visit (♡ in the list or "Want to go" on the card); they show in teal on the map, get their own tab, and become visited when you mark them.
+- **Tiny countries show up** — Singapore, Malta, Monaco, the Maldives and other places too small for the map are drawn as dots you can tap and zoom to.
+- **Phone-friendly start** — on a portrait phone the map opens zoomed in and centred on where you've been, instead of a thin world strip.
+- **Search that navigates** — understands aliases (UK, USA, Holland, Ivory Coast, ...); type a country, press Enter to fly to it and open its card; arrow keys and Space work from the keyboard.
 - **Visited / Not yet / All** tabs, grouped by region, plus a region chip strip with per-region progress.
 - Undo for every add, remove and "Clear all".
 - Swipeable mobile bottom sheet (peek / half / full) that keeps your count and search visible.
